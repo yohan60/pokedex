@@ -1,4 +1,4 @@
-import { IndexedPokemon, ListPokemon } from "@/interfaces/pokemon.interface"
+import { ListPokemon } from "@/interfaces/pokemon.interface"
 import PokemonCard from "@/app/components/PokemonCard";
 
 interface PokemonListProps {

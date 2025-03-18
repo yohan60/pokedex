@@ -4,7 +4,6 @@ import PokemonAvatar from '@/app/components/PokemonAvatar';
 import PokemonBasicInfo from '@/app/components/PokemonBasicInfo';
 import PokemonStats from '@/app/components/PokemonStats';
 import usePokemon from '@/hooks/usePokemon';
-import { Button, Grid } from '@mui/material';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
