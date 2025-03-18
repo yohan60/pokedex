@@ -1,29 +1,32 @@
-'use client'
+"use client";
 
-import PokemonAvatar from '@/app/components/PokemonAvatar';
-import PokemonBasicInfo from '@/app/components/PokemonBasicInfo';
-import PokemonStats from '@/app/components/PokemonStats';
-import usePokemon from '@/hooks/usePokemon';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import PokemonAvatar from "@/app/components/PokemonAvatar";
+import PokemonBasicInfo from "@/app/components/PokemonBasicInfo";
+import PokemonStats from "@/app/components/PokemonStats";
+import usePokemon from "@/hooks/usePokemon";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const PokemonDetail = () => {
   const params = useParams();
-  const name = Array.isArray(params?.pokemonName) ? params.pokemonName[0] : params?.pokemonName;
+  const name = Array.isArray(params?.pokemonName)
+    ? params.pokemonName[0]
+    : params?.pokemonName;
 
-  if (!name) {
-    // Si le nom est indéfini, on peut renvoyer une erreur ou une page 404
-    return <div>Pokemon non trouvé</div>;
-  }
-
+  // Au lieu de conditionner l'appel du hook, appelle-le systématiquement
   const { pokemon, isLoading } = usePokemon({ pokemonName: name });
+
+  // Si le nom est manquant, retourner une erreur ou page 404 après l'appel du hook
+  if (!name || isLoading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center pt-5 ">
-      <div className="text-white-500 text-4xl mb-7 font-black">{pokemon?.name}</div>
-      {isLoading ? (
-        <div className="text-center text-lg">Chargement...</div>
-      ) : pokemon ? (
+      <div className="text-white-500 text-4xl mb-7 font-black">
+        {pokemon?.name}
+      </div>
+      {pokemon ? (
         <>
           {/* Pokemon Avatar */}
           <div className="w-full h-15 md:w-1/2 mb-5">

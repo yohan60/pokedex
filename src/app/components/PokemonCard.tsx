@@ -11,6 +11,7 @@ interface PokemonCardProps {
 const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   const [pokemonColor, setPokemonColor] = useState<string>("white");
 
+  // Définir getPokemonColor en dehors de useEffect
   const getPokemonColor = async () => {
     const color = await getColorFromUrl(pokemon.image || "");
     if (color) {
@@ -20,7 +21,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
 
   useEffect(() => {
     getPokemonColor();
-  }, []);
+  }, [pokemon]); // Ajoute pokemon dans les dépendances pour gérer les changements
 
   return (
     <div

@@ -10,10 +10,7 @@ interface PokemonAvatarProps {
 const PokemonAvatar = ({ pokemon }: PokemonAvatarProps) => {
   const [, setPokemonColor] = useState<string | null>(null);
 
-  useEffect(() => {
-    getPokemonColor();
-  }, []);
-
+  // Déplacer la fonction en dehors de useEffect
   const getPokemonColor = async () => {
     if (pokemon?.sprites?.other["official-artwork"]?.front_default) {
       const color = await getColorFromUrl(
@@ -22,6 +19,10 @@ const PokemonAvatar = ({ pokemon }: PokemonAvatarProps) => {
       if (color) setPokemonColor(color);
     }
   };
+
+  useEffect(() => {
+    getPokemonColor();
+  }, [pokemon]); // Ajoute pokemon aux dépendances
 
   return (
     <div className="flex items-center justify-center">
