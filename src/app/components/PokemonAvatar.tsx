@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { DetailPokemon } from "@/interfaces/pokemon.interface";
 import { getColorFromUrl } from "@/utils/colors";
+import Image from "next/image";
 
 interface PokemonAvatarProps {
   pokemon: DetailPokemon;
 }
 
 const PokemonAvatar = ({ pokemon }: PokemonAvatarProps) => {
-  const [pokemonColor, setPokemonColor] = useState<string | null>(null);
+  const [, setPokemonColor] = useState<string | null>(null);
 
   useEffect(() => {
     getPokemonColor();
@@ -15,7 +16,9 @@ const PokemonAvatar = ({ pokemon }: PokemonAvatarProps) => {
 
   const getPokemonColor = async () => {
     if (pokemon?.sprites?.other["official-artwork"]?.front_default) {
-      const color = await getColorFromUrl(pokemon.sprites.other["official-artwork"].front_default);
+      const color = await getColorFromUrl(
+        pokemon.sprites.other["official-artwork"].front_default
+      );
       if (color) setPokemonColor(color);
     }
   };
@@ -26,9 +29,11 @@ const PokemonAvatar = ({ pokemon }: PokemonAvatarProps) => {
         className="w-[50vw] h-[40vh] rounded-lg shadow-md p-4 flex justify-center items-center"
         style={{ backgroundColor: pokemon.color ?? "white" }}
       >
-        <img
+        <Image
           src={pokemon.sprites.other["official-artwork"].front_default}
           alt={pokemon.name}
+          width={500} // Set appropriate width
+          height={500} // Set appropriate height
           className="max-h-full max-w-full object-contain"
         />
       </div>

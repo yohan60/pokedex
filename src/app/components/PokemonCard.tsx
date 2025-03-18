@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IndexedPokemon } from "@/interfaces/pokemon.interface";
 import { getColorFromUrl } from "@/utils/colors";
+import Image from "next/image";
 
 interface PokemonCardProps {
   pokemon: IndexedPokemon;
 }
 
 const PokemonCard = ({ pokemon }: PokemonCardProps) => {
-  const [pokemonColor, setPokemonColor] = useState<string>('white');
+  const [pokemonColor, setPokemonColor] = useState<string>("white");
 
   const getPokemonColor = async () => {
-    const color = await getColorFromUrl(pokemon.image || '');
+    const color = await getColorFromUrl(pokemon.image || "");
     if (color) {
       setPokemonColor(color);
     }
@@ -31,16 +32,22 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
           className="cursor-pointer p-8 transition-colors duration-300 hover:bg-opacity-90"
           style={{ backgroundColor: pokemonColor }}
         >
-          <img
-            src={pokemon.image}
+          <Image
+            src={pokemon.image ?? "/images/default-pokemon.png"} // ✅ Image par défaut
             alt={pokemon.name}
-            className="h-56 w-full object-contain"
+            width={300}
+            height={224}
+            className="w-full object-contain"
           />
+
           <div className="absolute bottom-0 left-0 p-4">
             <h2 className="text-xl font-bold text-white capitalize">
               #{pokemon.pokedexNumber}
             </h2>
-            <h2 className="text-xl font-bold text-white capitalize" style={{ textTransform: "capitalize" }}>
+            <h2
+              className="text-xl font-bold text-white capitalize"
+              style={{ textTransform: "capitalize" }}
+            >
               {pokemon.name}
             </h2>
           </div>

@@ -8,13 +8,19 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 const PokemonDetail = () => {
-  const name = useParams()!!.pokemonName as string;
-  console.log(name);
+  const params = useParams();
+  const name = Array.isArray(params?.pokemonName) ? params.pokemonName[0] : params?.pokemonName;
+
+  if (!name) {
+    // Si le nom est indéfini, on peut renvoyer une erreur ou une page 404
+    return <div>Pokemon non trouvé</div>;
+  }
+
   const { pokemon, isLoading } = usePokemon({ pokemonName: name });
 
   return (
     <div className="flex flex-col items-center justify-center pt-5 ">
-      <div className="text-white-500 text-4xl mb-7   font-black">{pokemon?.name}</div>
+      <div className="text-white-500 text-4xl mb-7 font-black">{pokemon?.name}</div>
       {isLoading ? (
         <div className="text-center text-lg">Chargement...</div>
       ) : pokemon ? (
@@ -40,7 +46,8 @@ const PokemonDetail = () => {
 
       {/* Retour à la liste des pokémons */}
       <div className="mt-5">
-        <Link href="/"
+        <Link
+          href="/"
           className="px-6 py-2 bg-black rounded-lg border border-beige hover:bg-opacity-90 transition-all duration-300"
         >
           Retour à la liste des pokémons

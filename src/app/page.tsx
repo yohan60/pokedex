@@ -1,115 +1,92 @@
-// 'use client'
-// import usePokemons from "@/hooks/usePokemons";
-// import PokemonList from "./components/PokemonList";
-// import { Button, Container, Grid } from "@mui/material";
-// import { IndexedType } from "@/interfaces/pokemon.interface";
-
-// const Home = () => {
-//   const { pokemons, hasMorePokemon, fetchNextPage, pokemonTypes, setSelectedType, selectedType, setPokemons } = usePokemons();
-
-//   const handleSelectType = (type: IndexedType | null) => {
-//     if (type) {
-//       setSelectedType(type);
-//     } else {
-//       setPokemons([]);
-//       setSelectedType(null);
-//     }
-//   }
-
-//   return (
-//     <Container>
-//       <Grid container spacing={2} mt={1}>
-//         <Grid container item xs={12} sx={{ display: "flex", justifyContent: "center"}}>
-//           {pokemonTypes.map((type) => (
-//             <Button
-//               variant="contained"
-//               sx={{
-//                 "&.MuiButton-contained": {
-//                   background: type.color
-//                 },
-//                 m: 1,
-//               }}
-//               onClick={() => handleSelectType(type)}
-//             >
-//               {type.name}</Button>
-//           ))}
-//           <Button 
-//             variant="contained"
-//             sx={{
-//               m: 1,
-//             }}
-//             onClick={() => handleSelectType(null)}
-//           >
-//             ALL
-//           </Button>
-//         </Grid>
-//         <Grid container item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-//           <PokemonList pokemons={pokemons}></PokemonList>
-//           {hasMorePokemon ? (
-//             <Button className='px-6 py-2 bg-black rounded-lg border border-[#ffda8a] hover:bg-opacity-90 transition-all duration-300 mb-3' variant="contained" onClick={fetchNextPage}>
-//               Charger plus de Pokémons
-//             </Button>
-//           ) : null}
-//         </Grid>
-//       </Grid>
-//     </Container>
-//   );
-// };
-
-// export default Home
-
-'use client'
+"use client";
+import { useState } from "react";
 import usePokemons from "@/hooks/usePokemons";
 import PokemonList from "./components/PokemonList";
-import { Button, Container, Box, Stack } from "@mui/material";
+import { Button, Container, Box, Stack, Menu, MenuItem } from "@mui/material";
 import { IndexedType } from "@/interfaces/pokemon.interface";
 
 const Home = () => {
-  const { pokemons, hasMorePokemon, fetchNextPage, pokemonTypes, setSelectedType, selectedType, setPokemons } = usePokemons();
+  const {
+    pokemons,
+    hasMorePokemon,
+    fetchNextPage,
+    pokemonTypes,
+    setSelectedType,
+    setPokemons,
+  } = usePokemons();
+
+  // Gérer l'ouverture et la fermeture du menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleSelectType = (type: IndexedType | null) => {
     if (type) {
       setSelectedType(type);
     } else {
-      setPokemons([]);
-      setSelectedType(null);
+      setPokemons([]); // Réinitialiser les Pokémons
+      setSelectedType(null); // Réinitialiser le type sélectionné
     }
-  }
+    handleClose(); // Fermer le menu après la sélection
+  };
 
   return (
     <Container>
-      <Box mt={1}>
-        {/* Boutons de sélection des types */}
-        <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap">
+      <Box mt={4}>
+        {/* Bouton de sélection des types */}
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          sx={{
+            background: "white", color: "black",
+            "&:hover": { background: "white", opacity: 0.8 },
+          }}
+        >
+          Sélectionner un type
+        </Button>
+
+        {/* Menu déroulant de types */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
           {pokemonTypes.map((type) => (
-            <Button
+            <MenuItem
               key={type.name}
-              variant="contained"
-              sx={{
-                background: type.color,
-                "&:hover": { background: type.color, opacity: 0.8 }
-              }}
               onClick={() => handleSelectType(type)}
+              sx={{
+                backgroundColor: type.color,
+                "&:hover": { backgroundColor: type.color, opacity: 0.8 },
+              }}
             >
               {type.name}
-            </Button>
+            </MenuItem>
           ))}
-          <Button 
-            variant="contained"
-            sx={{ m: 1 }}
+          <MenuItem
             onClick={() => handleSelectType(null)}
+            sx={{
+              backgroundColor: "grey",
+              "&:hover": { backgroundColor: "grey", opacity: 0.8 },
+            }}
           >
             ALL
-          </Button>
-        </Stack>
+          </MenuItem>
+        </Menu>
 
         {/* Liste des Pokémon et bouton de chargement */}
         <Stack spacing={2} alignItems="center" mt={2}>
           <PokemonList pokemons={pokemons} />
           {hasMorePokemon && (
-            <Button 
-              className='px-6 py-2 bg-black rounded-lg border border-[#ffda8a] hover:bg-opacity-90 transition-all duration-300 mb-3' 
-              variant="contained" 
+            <Button
+              className="px-6 py-2 bg-black rounded-lg border border-[#ffda8a] hover:bg-opacity-90 transition-all duration-300 mb-3"
+              variant="contained"
               onClick={fetchNextPage}
             >
               Charger plus de Pokémons
